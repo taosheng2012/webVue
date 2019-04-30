@@ -1,0 +1,99 @@
+
+/*===================================================================*/
+/*common short class*/
+.inl-blo {
+  display: inline-block;
+}
+
+.float-r {
+  float: right;
+}
+
+.float-l {
+  float: left;
+}
+
+
+.mr10 {
+  margin-right: 10px;
+}
+
+.mr15 {
+  margin-right: 15px;
+}
+
+.mr20 {
+  margin-right: 20px;
+}
+
+.ml10 {
+  margin-left: 10px;
+}
+
+.ml15 {
+  margin-left: 15px;
+}
+
+.ml20 {
+  margin-left: 20px;
+}
+
+
+.flex {
+  display: flex;
+}
+
+.flex1 {
+  flex: 1;
+}
+
+
+.main-title, .title, .small-title {
+  color: #606266
+}
+
+.main-title {
+  font-size: 20px;
+  margin-bottom: 15px;
+  font-weight: normal;
+}
+
+.title {
+  font-size: 18px;
+}
+
+.small-title {
+  font-size: 16px;
+}
+
+.body {
+  font-size: 14px;
+}
+
+
+
+
+/*===================================================================*/
+/*override*/
+
+.el-menu {
+  border: none;
+}
+
+.el-menu-item, .el-submenu__title {
+  font-size: 16px;
+  
+  height: 40px;
+  line-height: 40px;
+}
+
+.el-submenu .el-menu-item {
+  font-size: 14px;
+  height: 40px;
+  line-height: 40px;
+  list-style: circle inside;
+}
+
+.el-menu-item * {
+  vertical-align: initial; 
+}

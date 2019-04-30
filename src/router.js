@@ -1,15 +1,22 @@
 import Vue from 'vue';
 import Router from 'vue-router';
+
 import Home from './views/Home.vue';
+import VueInfo from './views/VueInfo.vue';
 
 Vue.use(Router);
 
-export default new Router({
+const router = new Router({
   routes: [
     {
       path: '/',
       name: 'home',
       component: Home,
+    },
+    {
+      path: "/vue",
+      name: "vue",
+      component: VueInfo,
     },
     {
       path: '/about',
@@ -21,3 +28,16 @@ export default new Router({
     },
   ],
 });
+
+router.beforeEach((to, from, next) => {
+  console.log(to);
+  console.log(from);
+  
+  if(to.name) {
+    next()
+  } else {
+    next(false)
+  }
+});
+
+export default router;

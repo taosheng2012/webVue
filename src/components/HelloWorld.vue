@@ -1,5 +1,5 @@
 <template>
-  <div class="hello">
+  <div style="text-align: center;">
     <h1>{{ msg }}</h1>
     <p>
       For a guide and recipes on how to configure / customize this project,<br>
@@ -52,7 +52,7 @@ li {
   display: inline-block;
   margin: 0 10px;
 }
-a {
+/*a {
   color: #42b983;
-}
+}*/
 </style>
