@@ -1,98 +1,63 @@
 <template>
-  <div id="vueApp">
+  <div>
     <Aside />
-    <MainContent />
+    
+    <div :style="{marginLeft: flagFloatAside ? null : '250px'}">
+      <div class="top-bar">
+        <button class="nav-button" v-if="flagFloatAside" @click="navButtonClick">
+          <i class="lnr lnr-menu"></i>
+        </button>
+      </div>
+
+      <router-view style="padding: 15px;"></router-view>
+    </div>
   </div>
 </template>
 
 <script>
-import { mapState } from 'vuex';
+import { mapState, mapGetters } from 'vuex';
 
 import Aside from './views/Aside.vue';
-import MainContent from './views/MainContent.vue';
 
 export default {
-  name: 'app',
-  components: {
-    Aside,
-    MainContent,
-  },
-  beforeUpdate() {
-    return this.num;
-  },
-
-  data() {
-    return {
-      menuState: {
-        unfolding: null,
-        show: false,
-      },
-      msg: `Hello, world! ${new Date().toLocaleString()}`,
-      show: true,
-      num: 0,
-    };
-  },
   computed: {
-    ...mapState([
-      'isVerticalScreen', 'flagShowAside',
-    ]),
-
+    ...mapState(['flagShowAside']),
+    ...mapGetters(["flagFloatAside"]),
   },
   methods: {
-    getTime() {
-      return Date.now();
+    navButtonClick() {
+      this.$store.commit('setFlagShowAside', true);
     },
-    leftMenuItemClick(item) {
-      if (item.label !== this.menuState.unfolding) {
-        this.menuState.unfolding = item.label;
-      } else {
-        this.menuState.unfolding = null;
-      }
-    },
-
+  },
+  components: {
+    Aside,
   },
 };
 </script>
 
-<style>
-:root {
-  /*ElementUI*/
-  --color-main: #409EFF;
-  --color-success: #67C23A;
-  --color-warning: #E6A23C;
-  --color-danger: #F56C6C;
-  --color-info: #909399;
-  
-  --color-primary-text: #303133;
-  --color-regular-text: #303133;
-  --color-secondary-text: #303133;
-  
-  --size-title: 18px;
-  --size-title-small: 16px;
-  --size-body: 14px;
-  
-  --shadow-basic: 0 2px 4px rgba(0, 0, 0, .12);
-  --shadow-light: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
+<style scoped>
+.top-bar {
+  padding: 0px 15px;
+  height: 40px;
+
+  background-color: var(--color-main);
+  box-shadow: 0px 0px 5px 1px var(--color-main);
 }
 
-body {
-  /*font-family: "Helvetica Neue",Helvetica,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","微软雅黑",Arial,sans-serif;*/
+.nav-button {
+  color: white;
+  background-color: transparent;
+  border: 1px solid #fff0;
+  border-radius: 4px;
+  
+  line-height: 1;
+  
+  font-size: 26px;
+  margin: 0px;
+  padding: 5px 20px 5px 0px;
 }
 
-.size16 {
-  font-size: 16px;
-}
-
-
-ul {
-  list-style: none;
-  padding: 0px;
+.nav-button > .lnr {
   margin: 0px;
 }
-
-.lnr {
-  margin-right: 15px;
-}
-
-
 </style>

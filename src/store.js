@@ -1,31 +1,33 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
 
+import config from "./user"
+
 Vue.use(Vuex);
 
-const isVerticalScreen = window.innerHeight > window.innerWidth;
-
-export default new Vuex.Store({
+const store = new Vuex.Store({
   state: {
-    isVerticalScreen,
-    flagShowAside: !isVerticalScreen,
+    innerWidth: window.innerWidth,
+    innerHeight: window.innerHeight,
+    flagShowAside: window.innerWidth > config.floatAsidePoint ? true : false,
   },
   getters: {
-    
+    flagFloatAside: function(state, getters) {
+      return state.innerWidth < config.floatAsidePoint
+    },
   },
   mutations: {
-    toggleOrientation(state, payload) {
-      state.isVerticalScreen = !state.isVerticalScreen;
-      
-      if(state.isVerticalScreen) state.flagShowAside = false
-      else state.flagShowAside = true
+    updateWindowSize(state, payload) {
+      state.innerWidth = payload.innerWidth
+      state.innerHeight = payload.innerHeight
     },
     setFlagShowAside(state, payload) {
       state.flagShowAside = payload;
     },
-
   },
   actions: {
 
   },
 });
+
+export default store

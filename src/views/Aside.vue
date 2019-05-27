@@ -1,31 +1,35 @@
 <template>
   <div>
     <transition name="fade">
-      <div class="mask" v-show="isVerticalScreen && flagShowAside" @click="maskClick"></div>
+      <div class="mask" v-show="flagShowMask" @click="maskClick"></div>
     </transition>
     
     <transition name="slide">
       <div class="aside" v-show="flagShowAside">
         <div style="padding-top: 40px; text-align: center;">
-          <span class="lnr lnr-bug" style="font-size: 80px; color: var(--color-main); margin: 0;"></span>
+          <i class="lnr lnr-bug" style="font-size: 80px; color: var(--color-main); margin: 0;"></i>
         </div>
 
-        <div style="text-align: center; font-size: 20px; margin: 30px 0px 30px 0px;">
+        <div style="text-align: center; font-size: 20px; padding: 30px 0px 30px 0px;">
           Minimalism App
         </div>
         
-        <el-menu :unique-opened="true" :router="true" style="width: 248px">
-          <el-menu-item :index="menuList[0].path">
-            <i :class="menuList[0].icon"></i>{{menuList[0].label}}
-          </el-menu-item>
-          
-          <el-submenu v-for="item in menuList.slice(1)" :index="item.label">
-            <template #title class="aaa">
-              <i :class="item.icon"></i> <span>{{item.label}}</span>
-            </template>
+        <el-menu :unique-opened="true" :router="true" style="width: 99%">
+          <template v-for="item in menuList">
+            <el-menu-item v-if="item.path" :index="item.path" @click="menuItemClick" :key="item.label">
+              <i :class="item.icon"></i>{{item.label}}
+            </el-menu-item>
             
-            <el-menu-item v-for="subitem in item.children" :index="subitem.path" style="padding-left: 50px;">{{subitem.label}}</el-menu-item>
-          </el-submenu>
+            <el-submenu v-else :index="item.label" :key="item.label">
+              <template #title>
+                <i :class="item.icon"></i>{{item.label}}
+              </template>
+              
+              <el-menu-item v-for="subitem in item.children" :key="subitem.label" :index="subitem.path" style="padding-left: 50px;" @click="menuItemClick">
+                {{subitem.label}}
+              </el-menu-item>
+            </el-submenu>
+          </template>
         </el-menu>
         
         <div class="footer">
@@ -38,50 +42,86 @@
 </template>
 
 <script>
-import { mapState } from 'vuex';
+import { mapState, mapGetters, mapMutations } from 'vuex';
 
 export default {
+  created() {
+    window.addEventListener('resize', (event) => {
+      this.$store.commit('updateWindowSize', {
+        innerWidth: window.innerWidth,
+        innerHeight: window.innerHeight
+      });
+    });
+  },
   data: function() {
     return {
-      menuList: [{
-        label: 'Home',
-        icon: 'lnr lnr-home',
-        path: "/"
-      }, {
-        label: 'Web',
-        icon: 'lnr lnr-cloud',
-        children: [{
-          label: 'HTML',
-          path: "/about"
+      menuList: [
+        {
+          label: 'Home',
+          icon: 'lnr lnr-home',
+          path: "/"
         }, {
-          label: 'CSS',
-          path: "/about"
+          label: 'Browser',
+          icon: 'lnr lnr-earth',
+          path: "/browser"
         }, {
-          label: 'JavaScript',
-          path: "/about"
-        }],
-      }, {
-        label: 'Server',
-        icon: 'lnr lnr-keyboard',
-        children: [{
-          label: 'Node',
-          path: "/vue"
+          label: 'Web',
+          icon: 'lnr lnr-cloud',
+          children: [{
+            label: 'HTML',
+            path: "/html"
+          }, {
+            label: 'CSS',
+            path: "/css"
+          }, {
+            label: 'JavaScript',
+            path: "/js"
+          }],
         }, {
-          label: 'Python',
-          path: "/vue"
-        }],
-      }],
+          label: 'Server',
+          icon: 'lnr lnr-keyboard',
+          children: [{
+            label: 'Node',
+            path: "/node"
+          }, {
+            label: 'Python',
+            path: "/py"
+          }],
+        }, {
+          label: "About",
+          icon: "lnr lnr-heart",
+          path: "/about"
+        }
+      ],
+    }
+  },
+  computed: {
+    flagShowMask: function() {
+      return this.flagFloatAside && this.flagShowAside
+    },
+    ...mapState(["flagShowAside"]),
+    ...mapGetters(["flagFloatAside"]),
+  },
+  watch: {
+    flagFloatAside: function(newVal, oldVal) {
+      if(newVal) {
+        this.setFlagShowAside(false)
+      } else {
+        this.setFlagShowAside(true)
+      }
+      
     }
   },
   methods: {
     maskClick() {
-      this.$store.commit('setFlagShowAside', false);
+      this.setFlagShowAside(false)
     },
-  },
-  computed: {
-    ...mapState([
-      'isVerticalScreen', 'flagShowAside',
-    ]),
+    menuItemClick(menuItem) {
+      if(this.flagFloatAside) {
+        this.setFlagShowAside(false)
+      }
+    },
+    ...mapMutations(["setFlagShowAside"]),
   },
 };
 </script>
@@ -96,7 +136,7 @@ export default {
   height: 100vh;
 
   background-color: #0007;
-  transition: opacity 0.3s;
+  transition: opacity 0.4s;
 }
 
 .fade-enter, .fade-leave-to {
@@ -110,9 +150,9 @@ export default {
 .aside {
   position: fixed;
   z-index: 2001;
-  top: 0px;
+  top: 0;
+  bottom: 0;
   width: 250px;
-  height: 100vh;
   
   border-right: 1px solid lightgrey;
   
@@ -122,7 +162,7 @@ export default {
   background-color: white;
   overflow: auto;
   
-  transition: left 0.3s;
+  transition: left 0.4s;
   
 }
 
@@ -139,9 +179,10 @@ export default {
   
   width: 100%;
   
+  color: var(--color-secondary-text);
   font-size: 12px;
   text-align: center;
-  padding: 50px 0px 20px 0px;
+  padding: 50px 0px 30px 0px;
 }
 
 </style>
